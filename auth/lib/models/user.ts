@@ -46,7 +46,7 @@ const user: Schema = new Schema({
 }, { timestamps: true });
 
 user.methods.generateAuthToken = function () {
-    const token = jwt.sign({ email: this.email, userId: this._id, isAdmin: this.isAdmin }, "myprivatekey");
+    const token = jwt.sign({ email: this.email, userId: this._id, isAdmin: this.isAdmin }, "myprivatekeytest");
     return token;
 }
 
