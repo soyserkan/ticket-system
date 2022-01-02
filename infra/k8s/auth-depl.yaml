@@ -15,6 +15,9 @@ spec:
       containers:
         - name: auth
           image: serkansoy/auth
+          env:
+            - name: JWT_KEY
+              value: "mysecretkey"
 
 ---
 apiVersion: v1

@@ -43,10 +43,21 @@ const user: Schema = new Schema({
     },
     isAdmin: Boolean,
     imageLink: String
-}, { timestamps: true });
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.password;
+            delete ret.__v;
+        }
+    },
+    timestamps: true,
+}
+);
 
 user.methods.generateAuthToken = function () {
-    const token = jwt.sign({ email: this.email, userId: this._id, isAdmin: this.isAdmin }, "myprivatekeytest");
+    const token = jwt.sign({ email: this.email, userId: this._id, isAdmin: this.isAdmin }, process.env.JWT_KEY);
     return token;
 }
 

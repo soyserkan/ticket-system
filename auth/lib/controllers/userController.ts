@@ -20,7 +20,8 @@ export class UserController {
                         user = await new User({ name, surname, password, email }).save();
                         if (user) {
                             const token = user.generateAuthToken();
-                            res.header("Authorization", "Bearer " + token).send({ user, token });
+                            req.session = { jwt: token };
+                            res.status(HttpStatus.CREATED).send({ user });
                         }
                     } else {
                         throw new Error("user already registered.");

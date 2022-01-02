@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import helmet from 'helmet';
 import { Server } from 'http';
 import path from 'path';
+import cookieSession from 'cookie-session';
 
 import UserRouter from './routes/userRoute';
 import { Directories } from './directories';
@@ -22,6 +23,7 @@ export class App {
     }
     private config(): void {
         this.app.set('port', this.port);
+        this.app.set('trust proxy', true);
         // if (!process.env.PRIVATE_KEY || !process.env.BCRYPT_SALT) {
         //     process.exit(1);
         // }
@@ -32,6 +34,7 @@ export class App {
         this.app.use(bodyParser.json());
         this.app.use(cors.default());
         this.app.use(helmet());
+        this.app.use(cookieSession({ signed: false, secure: true }))
     }
     async listen(server: Server) {
         try {
