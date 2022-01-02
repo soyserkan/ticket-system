@@ -1,7 +1,7 @@
 import { App } from './app';
 import http from 'http';
 import dotenv from 'dotenv'
-//import { Directories } from './directories';
+import { Directories } from './directories';
 
 (async function init() {
     dotenv.config();
@@ -9,5 +9,5 @@ import dotenv from 'dotenv'
     const server = http.createServer(node.app);
     await node.listen(server);
     await node.mongoose();
-    //await Directories.createDirectories();
+    await Directories.createDirectories();
 })();

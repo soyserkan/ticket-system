@@ -57,7 +57,7 @@ const user: Schema = new Schema({
 );
 
 user.methods.generateAuthToken = function () {
-    const token = jwt.sign({ email: this.email, userId: this._id, isAdmin: this.isAdmin }, process.env.JWT_KEY);
+    const token = jwt.sign({ email: this.email, id: this._id }, process.env.JWT_KEY);
     return token;
 }
 
@@ -73,11 +73,23 @@ user.pre("save", async function (next) {
 
 export default model<User>('User', user);
 
-export function validateUser(user) {
+export function signupValidation(user) {
     try {
         const schema = Joi.object({
             name: Joi.string().min(3).max(30).required(),
             surname: Joi.string().min(2).max(30).required(),
+            email: Joi.string().lowercase().trim().min(5).max(255).required().email(),
+            password: Joi.string().min(3).max(255).required()
+        });
+        return schema.validate(user, { abortEarly: false }) as ValidationResult;
+    } catch (error) {
+        return error as ValidationResult;
+    }
+}
+
+export function signinValidation(user) {
+    try {
+        const schema = Joi.object({
             email: Joi.string().lowercase().trim().min(5).max(255).required().email(),
             password: Joi.string().min(3).max(255).required()
         });

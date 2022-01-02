@@ -24,9 +24,10 @@ export class App {
     private config(): void {
         this.app.set('port', this.port);
         this.app.set('trust proxy', true);
-        // if (!process.env.PRIVATE_KEY || !process.env.BCRYPT_SALT) {
-        //     process.exit(1);
-        // }
+        if (!process.env.JWT_KEY) {
+            console.error('jwt key not found');
+            process.exit(1);
+        }
     }
     private middlewares(): void {
         this.app.use(express.static(path.join(Directories.public, 'public')));

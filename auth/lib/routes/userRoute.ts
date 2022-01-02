@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/userController';
+import { checkUser } from '../middlewares/check-user';
 
 class UserRouter {
     router: Router;
@@ -10,16 +11,14 @@ class UserRouter {
         this.routes();
     }
     public routes() {
-        this.router.get('/currentuser', this.userController.getCurrentUser);
-        this.router.post('/signin', this.userController.login);
+        this.router.get('/currentuser', checkUser, this.userController.getCurrentUser);
+        this.router.post('/signin', this.userController.signin);
         this.router.post('/signup', this.userController.signup);
         this.router.post('/signout', this.userController.signout);
 
 
         this.router.post('/changePassword/sendEmail', this.userController.sendResetEmail);
         this.router.post('/changePassword/reset', this.userController.resetPassword);
-        this.router.get('/:email', this.userController.getUserByEmail);
-        this.router.put('/:id', this.userController.updateUser);
     }
 }
 

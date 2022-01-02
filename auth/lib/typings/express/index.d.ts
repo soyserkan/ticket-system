@@ -1,8 +1,8 @@
-declare namespace Express {
+namespace Express {
     export interface Request {
-        user: any;
+        currentUser?: any;
     }
     export interface Response {
-        user: any;
+        currentUser?: any;
     }
 }
