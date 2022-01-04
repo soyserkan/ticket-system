@@ -1,6 +1,10 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import request from 'supertest';
+import { App } from '../app';
+import { HttpStatus } from '../enums/status';
+
 dotenv.config();
 let mongo: any;
 
@@ -10,7 +14,6 @@ beforeAll(async () => {
     const uri = mongo.getUri();
     try {
         await mongoose.connect(uri);
-        console.log('Test mongoose => connection successful');
     } catch (error) {
         console.error('Test mongoose => connection error: ' + error);
     }
@@ -27,3 +30,16 @@ afterAll(async () => {
     await mongo.stop();
     await mongoose.connection.close();
 });
+
+global.signin = async () => {
+    const node = new App(process.env.PORT || 3000);
+    const signup_res = await request(node.app).post('/api/users/signup').send({
+        email: 'test@test.com',
+        password: '123456',
+        name: 'Serkan',
+        surname: 'Soy'
+    }).expect(HttpStatus.CREATED)
+
+    const cookie = signup_res.get('Set-Cookie');
+    return cookie;
+}

@@ -47,7 +47,7 @@ it('returns a 400 with missing parameters', async function () {
 
     await request(node.app).post('/api/users/signup').send({
         name: 'Serkan',
-        surname:'Soy'
+        surname: 'Soy'
     }).expect(HttpStatus.BAD_REQUEST);
 });
 
@@ -65,4 +65,16 @@ it('block duplicate email', async function () {
         name: 'Serkan2',
         surname: 'Soy2'
     }).expect(HttpStatus.BAD_REQUEST)
+});
+
+
+it('sets a cookie after successfull signup', async function () {
+    const response = await request(node.app).post('/api/users/signup').send({
+        email: 'test@test.com',
+        password: '123456',
+        name: 'Serkan',
+        surname: 'Soy'
+    }).expect(HttpStatus.CREATED)
+
+    expect(response.get("Set-Cookie")).toBeDefined();
 });
