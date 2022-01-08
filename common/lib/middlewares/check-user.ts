@@ -17,8 +17,8 @@ declare global {
 export function checkUser(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session?.jwt) {
-            throw new UnauthorizedError();
             console.log("1");
+            throw new UnauthorizedError();
         }
         const payload = jwt.verify(req.session.jwt, "mysecretkey");
         req.currentUser = payload;
