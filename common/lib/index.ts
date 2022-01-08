@@ -7,5 +7,6 @@ export * from "./errors/not-authorized-error";
 
 export * from "./enums/status"
 
-export * from "./middlewares/check-user"
+export * from "./middlewares/current-user"
+export * from "./middlewares/require-auth"
 export * from "./middlewares/error-handler"
