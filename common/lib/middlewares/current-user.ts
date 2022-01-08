@@ -14,7 +14,7 @@ declare global {
 }
 
 
-export function checkUser(req: Request, res: Response, next: NextFunction) {
+export function currentUser(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session?.jwt) {
             throw new UnauthorizedError();
