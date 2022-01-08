@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import request from 'supertest';
 import { App } from '../app';
-import { HttpStatus } from '../enums/status';
+import { HttpStatus } from '@serkans/ticketsystem-common';
 
 dotenv.config();
 let mongo: any;

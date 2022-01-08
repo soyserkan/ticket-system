@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
-const path = require("path");
 const mg = require("nodemailer-mailgun-transport");
 
 export class Nodemailer {

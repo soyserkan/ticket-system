@@ -10,8 +10,7 @@ import cookieSession from 'cookie-session';
 
 import UserRouter from './routes/userRoute';
 import { Directories } from './directories';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
+import { errorHandler, NotFoundError } from '@serkans/ticketsystem-common';
 
 export class App {
     public app: Application;

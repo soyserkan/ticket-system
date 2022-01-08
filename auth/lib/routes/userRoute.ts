@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/userController';
-import { checkUser } from '../middlewares/check-user';
+import { checkUser } from '@serkans/ticketsystem-common';
 
 class UserRouter {
     router: Router;
