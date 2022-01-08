@@ -16,7 +16,7 @@ declare global {
 export function checkUser(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session?.jwt) {
-            return next();
+            throw new Error("user not authorized");
         }
         const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY);
         req.currentUser = payload;
