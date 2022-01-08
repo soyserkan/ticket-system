@@ -23,8 +23,8 @@ export function checkUser(req: Request, res: Response, next: NextFunction) {
         const payload = jwt.verify(req.session.jwt, "mysecretkey");
         req.currentUser = payload;
         if (!req.currentUser) {
-            throw new UnauthorizedError();
             console.log("2");
+            throw new UnauthorizedError();
         }
         next();
     } catch (error) {
