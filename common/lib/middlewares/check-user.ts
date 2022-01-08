@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { NotFoundError, UnauthorizedError } from "..";
 
 declare global {
     namespace Express {
@@ -16,12 +17,12 @@ declare global {
 export function checkUser(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session?.jwt) {
-            throw new Error("user not authorized");
+            throw new UnauthorizedError();
         }
         const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY);
         req.currentUser = payload;
         if (!req.currentUser) {
-            throw new Error("user not authorized");
+            throw new UnauthorizedError();
         }
         next();
     } catch (error) {
