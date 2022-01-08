@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "del ./dist/*",
     "build": "npm run clean && tsc",
-    "pub": "npm version patch && npm run build && npm publish"
+    "pub": "git add . && git commit -m \"npm common module updates\" && npm version patch && npm run build && npm publish"
   },
   "keywords": [],
   "author": "Serkan Soy",
