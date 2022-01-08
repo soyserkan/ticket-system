@@ -1,6 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+declare global {
+    namespace Express {
+        export interface Request {
+            currentUser?: any;
+        }
+        export interface Response {
+            currentUser?: any;
+        }
+    }
+}
+
 
 export function checkUser(req: Request, res: Response, next: NextFunction) {
     try {
