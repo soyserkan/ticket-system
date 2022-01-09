@@ -5,7 +5,8 @@ import Token from '../models/token';
 import { NextFunction, Request, Response } from 'express';
 import { Nodemailer } from '../services/nodemailer';
 import { Directories } from '../directories';
-import { HttpStatus, JoiValidationError } from '@serkans/ticketsystem-common';
+import { HttpStatus } from '@serkans/status-codes';
+import { JoiValidationError } from '@serkans/error-handler';
 
 export class UserController {
     public async signup(req: Request, res: Response, next: NextFunction) {

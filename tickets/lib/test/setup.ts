@@ -1,9 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
-import request from 'supertest';
-import { App } from '../app';
-import { HttpStatus } from '@serkans/status-codes';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 let mongo: any;
@@ -31,15 +29,9 @@ afterAll(async () => {
     await mongoose.connection.close();
 });
 
-global.signin = async () => {
-    const node = new App(process.env.PORT || 3000);
-    const signup_res = await request(node.app).post('/api/users/signup').send({
-        email: 'test@test.com',
-        password: '123456',
-        name: 'Serkan',
-        surname: 'Soy'
-    }).expect(HttpStatus.CREATED)
-
-    const cookie = signup_res.get('Set-Cookie');
-    return cookie;
+global.getCookie = () => {
+    const token = jwt.sign({ id: '123', email: 'test@test.com' }, "mysecretkey");
+    const session = { jwt: token };
+    const base64 = Buffer.from(JSON.stringify(session)).toString('base64');
+    return [`session=${base64}; path=/; httponly`];
 }

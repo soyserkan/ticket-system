@@ -1,4 +1,6 @@
 auth/node_modules
 client/node_modules
+tickets/node_modules
 client/.next
 auth/.env
+tickets/.env

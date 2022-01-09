@@ -1,6 +1,6 @@
+import { HttpStatus } from '@serkans/status-codes';
 import request from 'supertest';
 import { App } from '../../app';
-import { HttpStatus } from '@serkans/ticketsystem-common';
 
 const node = new App(process.env.PORT || 3000);
 

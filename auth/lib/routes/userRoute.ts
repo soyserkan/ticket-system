@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/userController';
-import { checkUser } from '@serkans/ticketsystem-common';
+import { currentUser } from '@serkans/ticketsystem-common';
 
 class UserRouter {
     router: Router;
@@ -11,7 +11,7 @@ class UserRouter {
         this.routes();
     }
     public routes() {
-        this.router.get('/currentuser', checkUser, this.userController.getCurrentUser);
+        this.router.get('/currentuser', currentUser, this.userController.getCurrentUser);
         this.router.post('/signin', this.userController.signin);
         this.router.post('/signup', this.userController.signup);
         this.router.post('/signout', this.userController.signout);

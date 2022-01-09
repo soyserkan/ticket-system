@@ -8,10 +8,11 @@ import { Server } from 'http';
 import path from 'path';
 import cookieSession from 'cookie-session';
 
-import UserRouter from './routes/userRoute';
+import TicketRouter from './routes/ticketRoute'
+
 import { Directories } from './directories';
+import { errorHandler, currentUser } from '@serkans/ticketsystem-common';
 import { NotFoundError } from '@serkans/error-handler';
-import { errorHandler } from '@serkans/ticketsystem-common';
 
 export class App {
     public app: Application;
@@ -64,8 +65,9 @@ export class App {
         let router: express.Router;
         router = express.Router();
         this.app.use('/', router);
-        this.app.use('/api/users', UserRouter);
+        this.app.use('/api/tickets', TicketRouter);
         this.app.all("*", () => { throw new NotFoundError() })
         this.app.use(errorHandler);
+        this.app.use(currentUser);
     }
 }
