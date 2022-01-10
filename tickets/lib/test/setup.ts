@@ -30,8 +30,8 @@ afterAll(async () => {
 });
 
 global.getCookie = () => {
-    const token = jwt.sign({ id: '123', email: 'test@test.com' }, "mysecretkey");
-    const session = { jwt: token };
-    const base64 = Buffer.from(JSON.stringify(session)).toString('base64');
-    return [`session=${base64}; path=/; httponly`];
+    return [`session=eyJqd3QiOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKbGJXRnBiQ0k2SW5ObGNtdGhia0J6YjNrdVkyOXRJaXdpYVdRaU9pSTJNV1JqT1RZeE16a3dZV1l4TVRCak5UaGhZMlZqT1RRaUxDSnBZWFFpT2pFMk5ERTRORFl5T1RKOS5sZ2tpY2dOTkJfRS1CRjRnNjBUMDNFVnk2N3ZBWGdpbXY1ZmllV21uUVk4In0=`];
 }
+//["session=eyJqd3QiOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKbGJXRnBiQ0k2SW5SbGMzUkFkR1Z6ZEM1amIyMG
+//lMQ0pwWkNJNklqWXhaR000TkdFM05XVmlabVZrTW1VM1lUVmxOamN3WlNJc0ltbGhkQ0k2TVRZME1UZzBNVGd6TVgwLjJ3anlKbE9VUVRYY2pSQmFJeDg1
+//SlVmLXJ0dWQ2MFZaUVpnRkRMM1U3dVUifQ==; path=/; httponly"]

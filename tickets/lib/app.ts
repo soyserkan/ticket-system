@@ -66,9 +66,9 @@ export class App {
         let router: express.Router;
         router = express.Router();
         this.app.use('/', router);
+        this.app.use(currentUser);
         this.app.use('/api/tickets', TicketRouter);
         this.app.all("*", () => { throw new NotFoundError() })
         this.app.use(errorHandler);
-        this.app.use(currentUser);
     }
 }
