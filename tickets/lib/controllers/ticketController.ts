@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Ticket, { ticketValidation } from '../models/ticket';
 import { HttpStatus } from '@serkans/status-codes';
-import { JoiValidationError } from '@serkans/ticketsystem-common';
+import { JoiValidationError } from '@serkans/error-handler';
 
 export class TicketController {
     public async create(req: Request, res: Response, next: NextFunction) {

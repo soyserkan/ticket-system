@@ -11,7 +11,7 @@ import cookieSession from 'cookie-session';
 import UserRouter from './routes/userRoute';
 import { Directories } from './directories';
 import { NotFoundError } from '@serkans/error-handler';
-import { errorHandler } from '@serkans/ticketsystem-common';
+import { errorHandler } from './middlewares/error-handler';
 
 export class App {
     public app: Application;

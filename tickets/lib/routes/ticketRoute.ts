@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { requireAuth } from '@serkans/ticketsystem-common';
 import { TicketController } from '../controllers/ticketController';
+import { requireAuth } from '../middlewares/require-auth';
 
 class TicketRouter {
     router: Router;
