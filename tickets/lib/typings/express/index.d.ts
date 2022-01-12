@@ -1,8 +1,13 @@
 namespace Express {
     export interface Request {
-        currentUser?: any;
+        currentUser?: CurrentUser;
     }
     export interface Response {
-        currentUser?: any;
+        currentUser?: CurrentUser;
     }
+}
+
+interface CurrentUser {
+    id: string;
+    email: string;
 }

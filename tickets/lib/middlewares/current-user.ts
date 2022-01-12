@@ -2,18 +2,6 @@ import { UnauthorizedError } from "@serkans/error-handler";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-declare global {
-    namespace Express {
-        export interface Request {
-            currentUser?: any;
-        }
-        export interface Response {
-            currentUser?: any;
-        }
-    }
-}
-
-
 export function currentUser(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session?.jwt) {
