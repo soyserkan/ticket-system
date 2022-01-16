@@ -10,10 +10,10 @@ import cookieSession from 'cookie-session';
 import { rabbitmq } from '@serkans/rabbitmq-service';
 import { NotFoundError } from '@serkans/error-handler';
 
-//import TicketRouter from './routes/ticketRoute'
+import OrderRouter from './routes/orderRoute'
 import { Directories } from './directories';
-// import { errorHandler } from './middlewares/error-handler';
-// import { currentUser } from './middlewares/current-user';
+import { errorHandler } from './middlewares/error-handler';
+import { currentUser } from './middlewares/current-user';
 
 export class App {
     public app: Application;
@@ -78,9 +78,9 @@ export class App {
         let router: express.Router;
         router = express.Router();
         this.app.use('/', router);
-        //this.app.use(currentUser);
-        //this.app.use('/api/tickets', TicketRouter);
+        this.app.use(currentUser);
+        this.app.use('/api/tickets', OrderRouter);
         this.app.all("*", () => { throw new NotFoundError() })
-        //this.app.use(errorHandler);
+        this.app.use(errorHandler);
     }
 }
