@@ -1,10 +1,38 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
-import jwt from 'jsonwebtoken';
 
 dotenv.config();
 let mongo: any;
+
+
+export const rabbitmq = {
+    channel: {
+        publish: jest
+            .fn()
+            .mockImplementation(
+                (queueName: string, data: string, callback: () => void) => {
+                    callback();
+                }
+            ),
+        assertQueue: jest
+            .fn()
+            .mockImplementation(
+                () => { }
+            ),
+        sendToQueue: jest
+            .fn()
+            .mockImplementation(
+                () => { }
+            )
+    },
+};
+
+
+jest.mock('@serkans/rabbitmq-service', () => ({
+    ...jest.requireActual('@serkans/rabbitmq-service'),
+    rabbitmq: rabbitmq
+}));
 
 
 beforeAll(async () => {

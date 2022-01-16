@@ -8,6 +8,7 @@ import { Directories } from './directories';
     const node = new App(process.env.PORT || 3000);
     const server = http.createServer(node.app);
     await node.listen(server);
-    await node.mongoose();
+    await node.rabbitmq(process.env.RabbitMQ_URI);
+    await node.mongoose(process.env.MONGO_URI);
     await Directories.createDirectories();
 })();

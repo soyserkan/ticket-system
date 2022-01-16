@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Ticket, { ticketValidation } from '../models/ticket';
 import { HttpStatus } from '@serkans/status-codes';
 import { JoiValidationError, NotFoundError, UnauthorizedError } from '@serkans/error-handler';
+import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
 
 export class TicketController {
     public async create(req: Request, res: Response, next: NextFunction) {
@@ -12,6 +13,12 @@ export class TicketController {
                     const { title, price } = req.body
                     const new_ticket = await new Ticket({ title, price, userId: req.currentUser?.id }).save();
                     if (new_ticket) {
+                        await new Publisher(rabbitmq.channel).publish("ticket:create", {
+                            id: new_ticket.id,
+                            title: new_ticket.title,
+                            price: new_ticket.price,
+                            userId: new_ticket.userId
+                        });
                         res.status(HttpStatus.CREATED).send(new_ticket);
                     }
                 } else {
@@ -58,9 +65,20 @@ export class TicketController {
             if (ticket) {
                 const validate = ticketValidation(req.body);
                 if (validate) {
-                    ticket.set({ title: req.body.title, price: req.body.price });
-                    await ticket.save();
-                    res.status(HttpStatus.OK).send(ticket);
+                    if (!validate.error) {
+                        console.log(req.body);
+                        ticket.set({ title: req.body.title, price: req.body.price });
+                        await ticket.save();
+                        new Publisher(rabbitmq.channel).publish("ticket:update", {
+                            id: ticket.id,
+                            title: ticket.title,
+                            price: ticket.price,
+                            userId: ticket.userId
+                        });
+                        res.status(HttpStatus.OK).send(ticket);
+                    } else {
+                        throw new JoiValidationError(validate.error.details);
+                    }
                 } else {
                     throw new JoiValidationError(validate);
                 }

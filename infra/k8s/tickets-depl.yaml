@@ -20,6 +20,8 @@ spec:
               value: "mysecretkey"
             - name: MONGO_URI
               value: "mongodb://tickets-mongo-srv:27017/tickets"
+            - name: RabbitMQ_URI
+              value: "amqp://rabbitmq-srv:5672"
 
 ---
 apiVersion: v1

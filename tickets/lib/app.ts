@@ -7,11 +7,11 @@ import helmet from 'helmet';
 import { Server } from 'http';
 import path from 'path';
 import cookieSession from 'cookie-session';
+import { rabbitmq } from '@serkans/rabbitmq-service';
+import { NotFoundError } from '@serkans/error-handler';
 
 import TicketRouter from './routes/ticketRoute'
-
 import { Directories } from './directories';
-import { NotFoundError } from '@serkans/error-handler';
 import { errorHandler } from './middlewares/error-handler';
 import { currentUser } from './middlewares/current-user';
 
@@ -42,23 +42,35 @@ export class App {
         try {
             var PORT = this.app.get('port');
             await server.listen(PORT);
-            console.log(`Server => listening to port: ${PORT}!`);
+            console.log(`[Express] server listening to port: ${PORT}!`);
         } catch (error) {
             console.log(error);
             process.exit(1);
         }
     }
-    async mongoose() {
+    async rabbitmq(url: string | undefined) {
         try {
-            if (process.env.MONGO_URI) {
-                await mongoose.connect(process.env.MONGO_URI);
-                mongoose.set('debug', true);
-                console.log('Mongoose => connection successful');
+            if (url) {
+                await rabbitmq.connect(url);
+                console.log('[RabbitMQ] connection successful');
             } else {
-                console.error('Mongoose => connection uri not found');
+                console.error('[RabbitMQ] connection uri not found');
             }
         } catch (error) {
-            console.error('Mongoose => connection error: ' + error);
+            console.log('[RabbitMQ] connection error: ' + error);
+            process.exit(1);
+        }
+    }
+    async mongoose(url: string | undefined) {
+        try {
+            if (url) {
+                await mongoose.connect(url);
+                console.log('[MongoDB] connection successful');
+            } else {
+                console.error('[MongoDB] connection uri not found');
+            }
+        } catch (error) {
+            console.error('[MongoDB] connection error: ' + error);
             process.exit(1);
         }
     }

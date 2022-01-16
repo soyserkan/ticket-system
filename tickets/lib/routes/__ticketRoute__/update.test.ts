@@ -25,19 +25,10 @@ it('returns an updated tickets', async function () {
         .expect(HttpStatus.OK);
 
     expect(ticket.body.title).toEqual('test2');
-    expect(ticket.body.price).toEqual(11);
+    expect(ticket.body.price).toEqual("11");
 });
 
 it('returns an error when ticket is not found', async function () {
-    const object_id = new mongoose.Types.ObjectId().toHexString();
-    const response = await request(node.app)
-        .put(`/api/tickets/${object_id}`)
-        .send()
-
-    expect(response.status).toEqual(HttpStatus.NOT_FOUND);
-});
-
-it('returns an error when not authorized', async function () {
     const cookie = global.getCookie();
     const object_id = new mongoose.Types.ObjectId().toHexString();
     const response = await request(node.app)
@@ -45,15 +36,23 @@ it('returns an error when not authorized', async function () {
         .set('Cookie', cookie)
         .send()
 
+    expect(response.status).toEqual(HttpStatus.NOT_FOUND);
+});
+
+it('returns an error when not authorized', async function () {
+    const object_id = new mongoose.Types.ObjectId().toHexString();
+    const response = await request(node.app)
+        .put(`/api/tickets/${object_id}`)
+        .send()
+
     expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
 });
 
 it('returns an error when setting negative price value', async function () {
     const cookie = global.getCookie();
-    await createTicket(cookie, "test", 10);
-
+    const response = await createTicket(cookie, "test", 10);
     return request(node.app)
-        .put(`/api/tickets`)
+        .put(`/api/tickets/${response.body.id}`)
         .set('Cookie', cookie)
         .send({ title: 'test2', price: -24 })
         .expect(HttpStatus.BAD_REQUEST);
