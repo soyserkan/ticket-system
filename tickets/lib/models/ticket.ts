@@ -16,7 +16,8 @@ const ticket: Schema = new Schema({
     price: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        min: 0
     },
     userId: {
         type: String,
