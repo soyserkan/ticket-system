@@ -31,20 +31,38 @@ export class OrderController {
     }
     public async get(req: Request, res: Response, next: NextFunction) {
         try {
-
+            const order = await Order.findOne({ userId: req.currentUser?.id, id: req.body.id }).populate('ticket');
+            if (order) {
+                res.status(HttpStatus.OK).send(order);
+            } else {
+                throw new NotFoundError();
+            }
         } catch (error) {
             next(error);
         }
     }
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-
+            const orders = await Order.find({ userId: req.currentUser?.id }).populate('ticket');
+            if (orders) {
+                res.status(HttpStatus.OK).send(orders);
+            } else {
+                throw new NotFoundError();
+            }
         } catch (error) {
             next(error);
         }
     }
     public async delete(req: Request, res: Response, next: NextFunction) {
         try {
+            const order = await Order.findOne({ userId: req.currentUser?.id, id: req.body.id }).populate('ticket');
+            if (order) {
+                order.status = OrderStatus.Cancelled;
+                await order.save();
+                res.status(HttpStatus.OK).send(order);
+            } else {
+                throw new NotFoundError();
+            }
         } catch (error) {
             next(error);
         }

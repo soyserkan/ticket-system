@@ -14,7 +14,7 @@ class OrderRouter {
         this.router.post('/', requireAuth, this.orderController.create);
         this.router.get('/:id', requireAuth, this.orderController.get);
         this.router.get('/', requireAuth, this.orderController.getAll);
-        this.router.delete('/:id', requireAuth, this.orderController.delete);
+        this.router.patch('/:id', requireAuth, this.orderController.delete);
     }
 }
 

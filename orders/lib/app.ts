@@ -79,7 +79,7 @@ export class App {
         router = express.Router();
         this.app.use('/', router);
         this.app.use(currentUser);
-        this.app.use('/api/tickets', OrderRouter);
+        this.app.use('/api/orders', OrderRouter);
         this.app.all("*", () => { throw new NotFoundError() })
         this.app.use(errorHandler);
     }
