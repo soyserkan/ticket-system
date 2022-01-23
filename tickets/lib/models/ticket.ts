@@ -32,15 +32,9 @@ const ticket: Schema = new Schema({
         }
     },
     timestamps: true
-}
-);
-ticket.set('versionKey', 'version');
-ticket.plugin(updateIfCurrentPlugin)
-
-ticket.pre("save", async function (next) {
-    this._id = this.id;
-    delete this.id
-    next();
 });
+
+ticket.set('versionKey', 'version');
+ticket.plugin(updateIfCurrentPlugin);
 
 export default model<Ticket>('Ticket', ticket);

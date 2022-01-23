@@ -1,9 +1,7 @@
 import Ticket from '../ticket';
-var mongoose = require('mongoose');
 
 it('implement optimistic concurrency control', async () => {
     const ticket = await Ticket.create({
-        id: mongoose.Types.ObjectId(),
         title: 'concert',
         price: 30,
         userId: '123'
