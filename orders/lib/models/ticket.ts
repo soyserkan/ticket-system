@@ -4,7 +4,7 @@ import Order from './order';
 
 
 export interface Ticket {
-    id: string,
+    _id: string,
     title: string,
     price: string,
     isReserved(): Promise<boolean>;
@@ -28,16 +28,7 @@ const ticket: Schema = new Schema({
             delete ret._id;
         }
     },
-    timestamps: true,versionKey: false
-}
-);
-
-ticket.pre("save", async function (next) {
-    if (this.id) {
-        this._id = this.id;
-        delete this.id
-    }
-    next();
+    timestamps: true
 });
 
 ticket.methods.isReserved = async function () {

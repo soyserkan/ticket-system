@@ -41,12 +41,5 @@ const order: Schema = new Schema({
     timestamps: true,versionKey: false
 }
 );
-order.pre("save", async function (next) {
-    if (this.id) {
-        this._id = this.id;
-        delete this.id
-    }
-    next();
-});
 
 export default model<Order>('Order', order);

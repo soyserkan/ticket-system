@@ -72,7 +72,7 @@ export class OrderController {
                 new Publisher(rabbitmq.channel).publish("order:cancel", {
                     id: order.id,
                     ticket: {
-                        id: order.ticket.id,
+                        id: order.ticket._id,
                     }
                 })
                 res.status(HttpStatus.OK).send(order);

@@ -1,11 +1,9 @@
 import { rabbitmq, Subscriber } from "@serkans/rabbitmq-service";
 import { QueueName } from "../../types/queue-names";
+import Ticket from "../../models/ticket";
 
 
 export class TicketSubscriber {
-    /**
-     *
-     */
     constructor() {
     }
     async listenChannels() {
@@ -21,10 +19,27 @@ export class TicketSubscriber {
         }
 
     }
-    async TicketCreate(response) {
-        console.log(response);
+    async TicketCreate(msg) {
+        if (msg && msg.content) {
+            const content = JSON.parse(msg.content.toString());
+            const { id, title, price } = content;
+            if (content) {
+                await new Ticket({ _id: id, title, price }).save();
+                rabbitmq.channel.ack(msg);
+            }
+        }
     }
-    async TicketUpdate(response) {
-        console.log(response);
+    async TicketUpdate(msg) {
+        if (msg && msg.content) {
+            const content = JSON.parse(msg.content.toString());
+            if (content) {
+                const ticket = await Ticket.findById(content.id);
+                if (!ticket) {
+                    throw new Error("Ticket not found!");
+                }
+                await ticket.set({ title: content.title, price: content.price }).save();
+                rabbitmq.channel.ack(msg);
+            }
+        }
     }
 }

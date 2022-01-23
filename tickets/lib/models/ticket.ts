@@ -1,10 +1,12 @@
 import { Schema, model } from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 
 
 interface Ticket {
     title: string,
     price: string,
-    userId: string
+    userId: string,
+    version: number
 }
 
 const ticket: Schema = new Schema({
@@ -29,15 +31,15 @@ const ticket: Schema = new Schema({
             delete ret._id;
         }
     },
-    timestamps: true, versionKey: false
+    timestamps: true
 }
 );
+ticket.set('versionKey', 'version');
+ticket.plugin(updateIfCurrentPlugin)
 
 ticket.pre("save", async function (next) {
-    if (this.id) {
-        this._id = this.id;
-        delete this.id
-    }
+    this._id = this.id;
+    delete this.id
     next();
 });
 
