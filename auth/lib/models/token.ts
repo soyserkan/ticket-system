@@ -23,7 +23,7 @@ const token: Schema = new Schema({
     default: Date.now,
     expires: 3600
   }
-}, { timestamps: true });
+}, { timestamps: true ,versionKey: false});
 
 
 export default model<Token>('Token', token);

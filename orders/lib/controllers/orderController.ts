@@ -24,6 +24,16 @@ export class OrderController {
             // const expiration = new Date();
             // expiration.setSeconds(expiration.getSeconds() + this.EXPIRATION_WINDOW_SECONDS);
             const order = await Order.create({ userId: req.currentUser?.id, ticket: ticket });
+            new Publisher(rabbitmq.channel).publish("order:create", {
+                id: order.id,
+                status: order.status,
+                userId: order.userId,
+                expiresAt: (order.expiresAt as any).toISOString(),
+                ticket: {
+                    id: ticket.id,
+                    price: ticket.price
+                }
+            })
             res.status(HttpStatus.CREATED).send(order);
         } catch (error) {
             next(error);
@@ -59,6 +69,12 @@ export class OrderController {
             if (order) {
                 order.status = OrderStatus.Cancelled;
                 await order.save();
+                new Publisher(rabbitmq.channel).publish("order:cancel", {
+                    id: order.id,
+                    ticket: {
+                        id: order.ticket.id,
+                    }
+                })
                 res.status(HttpStatus.OK).send(order);
             } else {
                 throw new NotFoundError();

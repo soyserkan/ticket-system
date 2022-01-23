@@ -1,12 +1,13 @@
 import bcrypt from 'bcryptjs';
 import crypto from "crypto";
-import User, { signinValidation, signupValidation } from '../models/user'
+import User from '../models/user'
 import Token from '../models/token';
 import { NextFunction, Request, Response } from 'express';
 import { Nodemailer } from '../services/nodemailer';
 import { Directories } from '../directories';
 import { HttpStatus } from '@serkans/status-codes';
 import { JoiValidationError } from '@serkans/error-handler';
+import { signinValidation, signupValidation } from '../validations/user';
 
 export class UserController {
     public async signup(req: Request, res: Response, next: NextFunction) {

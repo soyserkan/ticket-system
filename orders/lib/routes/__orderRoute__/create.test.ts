@@ -1,3 +1,4 @@
+import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
 import { HttpStatus } from '@serkans/status-codes';
 import mongoose from 'mongoose';
 import request from 'supertest';

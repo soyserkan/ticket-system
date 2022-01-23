@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import Ticket, { ticketValidation } from '../models/ticket';
+import Ticket from '../models/ticket';
 import { HttpStatus } from '@serkans/status-codes';
 import { JoiValidationError, NotFoundError, UnauthorizedError } from '@serkans/error-handler';
 import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
+import { ticketValidation } from '../validations/ticket';
+import { QueueName } from '../types/queue-names';
 
 export class TicketController {
     public async create(req: Request, res: Response, next: NextFunction) {
@@ -10,10 +12,10 @@ export class TicketController {
             const validate = ticketValidation(req.body);
             if (validate) {
                 if (!validate.error) {
-                    const { title, price } = req.body
+                    const { title, price } = req.body;
                     const new_ticket = await new Ticket({ title, price, userId: req.currentUser?.id }).save();
                     if (new_ticket) {
-                        await new Publisher(rabbitmq.channel).publish("ticket:create", {
+                        await new Publisher(rabbitmq.channel).publish(QueueName.TICKET_CREATE, {
                             id: new_ticket.id,
                             title: new_ticket.title,
                             price: new_ticket.price,
@@ -66,10 +68,9 @@ export class TicketController {
                 const validate = ticketValidation(req.body);
                 if (validate) {
                     if (!validate.error) {
-                        console.log(req.body);
                         ticket.set({ title: req.body.title, price: req.body.price });
                         await ticket.save();
-                        new Publisher(rabbitmq.channel).publish("ticket:update", {
+                        new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
                             id: ticket.id,
                             title: ticket.title,
                             price: ticket.price,

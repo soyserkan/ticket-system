@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import Joi, { ValidationResult } from "joi";
 
 
 interface Ticket {
@@ -28,23 +27,18 @@ const ticket: Schema = new Schema({
         transform(doc, ret) {
             ret.id = ret._id;
             delete ret._id;
-            delete ret.__v;
         }
     },
-    timestamps: true
+    timestamps: true, versionKey: false
 }
 );
 
-export default model<Ticket>('Ticket', ticket);
-
-export function ticketValidation(ticket) {
-    try {
-        const schema = Joi.object({
-            title: Joi.string().required(),
-            price: Joi.number().positive().required()
-        });
-        return schema.validate(ticket, { abortEarly: false }) as ValidationResult;
-    } catch (error) {
-        return error as ValidationResult;
+ticket.pre("save", async function (next) {
+    if (this.id) {
+        this._id = this.id;
+        delete this.id
     }
-}
+    next();
+});
+
+export default model<Ticket>('Ticket', ticket);
