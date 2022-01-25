@@ -17,6 +17,7 @@ export class TicketController {
                     if (new_ticket) {
                         await new Publisher(rabbitmq.channel).publish(QueueName.TICKET_CREATE, {
                             id: new_ticket.id,
+                            version: new_ticket.version,
                             title: new_ticket.title,
                             price: new_ticket.price,
                             userId: new_ticket.userId
@@ -72,6 +73,7 @@ export class TicketController {
                         await ticket.save();
                         new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
                             id: ticket.id,
+                            version: ticket.version,
                             title: ticket.title,
                             price: ticket.price,
                             userId: ticket.userId
