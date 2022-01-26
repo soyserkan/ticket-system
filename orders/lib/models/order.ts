@@ -1,7 +1,6 @@
 import { Schema, model, Date } from 'mongoose';
-import Joi, { ValidationResult } from "joi";
 import { OrderStatus } from '../types/order-status';
-import { Ticket } from './ticket';
+import { TicketModel } from './ticket';
 
 const expiration = new Date();
 
@@ -9,7 +8,7 @@ interface Order {
     userId: string,
     status: OrderStatus,
     expiresAt: Date,
-    ticket: Ticket
+    ticket: TicketModel
 }
 
 const order: Schema = new Schema({
@@ -38,7 +37,7 @@ const order: Schema = new Schema({
             delete ret._id;
         }
     },
-    timestamps: true,versionKey: false
+    timestamps: true, versionKey: false
 }
 );
 

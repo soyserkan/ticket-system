@@ -33,6 +33,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^6.0.8",
+    "mongoose-update-if-current": "^1.4.0",
     "supertest": "^6.1.6",
     "ts-node-dev": "^1.1.8"
   },

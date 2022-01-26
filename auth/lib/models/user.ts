@@ -65,10 +65,6 @@ user.pre("save", async function (next) {
     }
     const hash = await bcrypt.hash((this as any).password, 10);
     (this as any).password = hash;
-    if (this.id) {
-        this._id = this.id;
-        delete this.id
-    }
     next();
 });
 

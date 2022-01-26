@@ -33,12 +33,13 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findById(content.id);
+                const ticket = await Ticket.findByEvent({ id: content.id, version: content.version });
                 if (!ticket) {
                     throw new Error("Ticket not found!");
+                } else {
+                    await ticket.set({ title: content.title, price: content.price }).save();
+                    rabbitmq.channel.ack(msg);
                 }
-                await ticket.set({ title: content.title, price: content.price }).save();
-                rabbitmq.channel.ack(msg);
             }
         }
     }

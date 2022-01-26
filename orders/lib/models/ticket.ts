@@ -1,16 +1,21 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import { OrderStatus } from '../types/order-status';
 import Order from './order';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 
-export interface Ticket {
+export interface TicketAttr extends mongoose.Document {
     _id: string,
+    version: number,
     title: string,
     price: string,
     isReserved(): Promise<boolean>;
 }
+export interface TicketModel extends mongoose.Model<TicketAttr> {
+    findByEvent(parameters: { id: string, version: number }): Promise<TicketAttr | null>;
+}
 
-const ticket: Schema = new Schema({
+const ticketSchema: Schema = new Schema({
     title: {
         type: String,
         required: true
@@ -31,7 +36,17 @@ const ticket: Schema = new Schema({
     timestamps: true
 });
 
-ticket.methods.isReserved = async function () {
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+// ticketSchema.pre('save', function (done) {
+//     this.$where = {
+//         version:this.get('version') - 1
+//     };
+//     done();
+// })
+
+ticketSchema.methods.isReserved = async function () {
     const order = await Order.findOne({
         ticket: this,
         status: { $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete] }
@@ -39,4 +54,13 @@ ticket.methods.isReserved = async function () {
     return !!order;
 }
 
-export default model<Ticket>('Ticket', ticket);
+ticketSchema.statics.findByEvent = function (parameters: { id: string, version: number }) {
+    return Ticket.findOne({
+        _id: parameters.id,
+        version: parameters.version - 1
+    });
+}
+
+
+const Ticket = model<TicketAttr, TicketModel>('Ticket', ticketSchema);
+export default Ticket;
