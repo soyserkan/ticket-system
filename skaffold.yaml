@@ -39,4 +39,12 @@ build:
       sync:
         manual:
           - src: "lib/**/*.ts"
-            dest: .            
+            dest: .
+    - image: serkansoy/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "lib/**/*.ts"
+            dest: .
