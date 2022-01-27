@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import Ticket from '../models/ticket';
-import Order from '../models/order';
+import Order, { OrderAttr } from '../models/order';
 import { HttpStatus } from '@serkans/status-codes';
-import { JoiValidationError, NotFoundError, UnauthorizedError } from '@serkans/error-handler';
+import { NotFoundError } from '@serkans/error-handler';
 import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
 import { OrderStatus } from '../types/order-status';
+import { QueueName } from '../types/queue-names';
 
 
 export class OrderController {
@@ -24,8 +25,9 @@ export class OrderController {
             // const expiration = new Date();
             // expiration.setSeconds(expiration.getSeconds() + this.EXPIRATION_WINDOW_SECONDS);
             const order = await Order.create({ userId: req.currentUser?.id, ticket: ticket });
-            new Publisher(rabbitmq.channel).publish("order:create", {
+            new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CREATE, {
                 id: order.id,
+                version: order.version,
                 status: order.status,
                 userId: order.userId,
                 expiresAt: (order.expiresAt as any).toISOString(),
@@ -33,7 +35,7 @@ export class OrderController {
                     id: ticket.id,
                     price: ticket.price
                 }
-            })
+            } as OrderAttr)
             res.status(HttpStatus.CREATED).send(order);
         } catch (error) {
             next(error);
@@ -69,12 +71,13 @@ export class OrderController {
             if (order) {
                 order.status = OrderStatus.Cancelled;
                 await order.save();
-                new Publisher(rabbitmq.channel).publish("order:cancel", {
+                new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CANCEL, {
                     id: order.id,
+                    version: order.version,
                     ticket: {
-                        id: order.ticket._id,
+                        id: order.ticket.id,
                     }
-                })
+                } as OrderAttr)
                 res.status(HttpStatus.OK).send(order);
             } else {
                 throw new NotFoundError();

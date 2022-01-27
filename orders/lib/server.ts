@@ -2,7 +2,7 @@ import { App } from './app';
 import http from 'http';
 import dotenv from 'dotenv'
 import { Directories } from './directories';
-import { TicketSubscriber } from './events/subscriber/ticket-subscriber';
+import { TicketSubscriber } from './events/ticket-subscriber';
 
 (async function init() {
     dotenv.config();

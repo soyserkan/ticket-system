@@ -1,6 +1,6 @@
 import { rabbitmq, Subscriber } from "@serkans/rabbitmq-service";
-import { QueueName } from "../../types/queue-names";
-import Ticket from "../../models/ticket";
+import { QueueName } from "../types/queue-names";
+import Ticket from "../models/ticket";
 
 
 export class TicketSubscriber {

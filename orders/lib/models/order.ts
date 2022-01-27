@@ -1,17 +1,19 @@
-import { Schema, model, Date } from 'mongoose';
+import mongoose, { Schema, model, Date } from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { OrderStatus } from '../types/order-status';
-import { TicketModel } from './ticket';
+import { TicketAttr } from './ticket';
 
 const expiration = new Date();
 
-interface Order {
+export interface OrderAttr extends mongoose.Document {
     userId: string,
     status: OrderStatus,
     expiresAt: Date,
-    ticket: TicketModel
+    ticket: TicketAttr,
+    version: number
 }
 
-const order: Schema = new Schema({
+const orderSchema: Schema = new Schema({
     userId: {
         type: String,
         required: true,
@@ -37,8 +39,11 @@ const order: Schema = new Schema({
             delete ret._id;
         }
     },
-    timestamps: true, versionKey: false
-}
-);
+    timestamps: true
+});
 
-export default model<Order>('Order', order);
+
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
+
+export default model<OrderAttr>('Order', orderSchema);

@@ -1,15 +1,19 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 
 
-interface Ticket {
+interface TicketAttr extends mongoose.Document {
     title: string,
     price: string,
     userId: string,
-    version: number
+    version: number,
+    orderId: string
+}
+interface TicketNodel extends mongoose.Model<TicketAttr> {
+
 }
 
-const ticket: Schema = new Schema({
+const ticketSchema: Schema = new Schema({
     title: {
         type: String,
         required: true
@@ -23,6 +27,9 @@ const ticket: Schema = new Schema({
     userId: {
         type: String,
         required: true,
+    },
+    orderId: {
+        type: String
     }
 }, {
     toJSON: {
@@ -34,7 +41,7 @@ const ticket: Schema = new Schema({
     timestamps: true
 });
 
-ticket.set('versionKey', 'version');
-ticket.plugin(updateIfCurrentPlugin);
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
-export default model<Ticket>('Ticket', ticket);
+export default model<TicketAttr, TicketNodel>('Ticket', ticketSchema);

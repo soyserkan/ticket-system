@@ -62,6 +62,9 @@ export class TicketController {
             if (!ticket) {
                 throw new NotFoundError();
             }
+            if (ticket.orderId) {
+                throw new Error("cannot edit a reserved ticket");
+            }
             if (ticket.userId !== req.currentUser?.id) {
                 throw new UnauthorizedError();
             }
