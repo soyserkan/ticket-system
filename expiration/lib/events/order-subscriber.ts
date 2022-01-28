@@ -1,4 +1,5 @@
 import { Publisher, rabbitmq, Subscriber } from "@serkans/rabbitmq-service";
+import { expirationQueue } from "../queues/expiration-queue";
 import { QueueName } from "../types/queue-names";
 
 
@@ -22,7 +23,9 @@ export class OrderSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                
+                const delay = new Date(content.expiresAt).getTime() - new Date().getTime();
+                console.log("Scheduled job for", delay);
+                await expirationQueue.add({ orderId: content.id }, { delay });
                 rabbitmq.channel.ack(msg);
             }
         }
@@ -31,7 +34,7 @@ export class OrderSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                
+
                 rabbitmq.channel.ack(msg);
             }
         }
