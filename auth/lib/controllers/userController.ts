@@ -14,6 +14,7 @@ export class UserController {
         try {
             const validate = signupValidation(req.body);
             if (validate) {
+                console.log("signup");
                 if (!validate.error) {
                     const { email, name, surname, password } = req.body
                     let user = await User.findOne({ email });
