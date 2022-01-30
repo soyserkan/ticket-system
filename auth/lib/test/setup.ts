@@ -8,7 +8,7 @@ import { HttpStatus } from '@serkans/status-codes';
 dotenv.config();
 let mongo: any;
 
-
+jest.setTimeout(10000)
 beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
     const uri = mongo.getUri();
