@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev lib/server.ts",
     "test": "jest --watchAll --no-cache",
+    "test:ci": "jest",
     "start": "tsc && node dist/server.js"
   },
   "jest": {

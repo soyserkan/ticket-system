@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@serkans/rabbitmq-service": "^1.0.10",
+    "@serkans/rabbitmq-service": "^1.0.15",
     "@serkans/status-codes": "^1.0.1",
     "amqplib": "^0.8.0",
     "bull": "^4.4.0",
