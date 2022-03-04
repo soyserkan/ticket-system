@@ -8,7 +8,7 @@ import { Directories } from '../directories';
 import { HttpStatus } from '@serkans/status-codes';
 import { JoiValidationError } from '@serkans/error-handler';
 import { signinValidation, signupValidation } from '../validations/user';
-//deneme
+
 export class UserController {
     public async signup(req: Request, res: Response, next: NextFunction) {
         try {
