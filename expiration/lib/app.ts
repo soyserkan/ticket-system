@@ -1,6 +1,6 @@
 import { rabbitmq } from '@serkans/rabbitmq-service';
 
-
+//asdf
 export class App {
     constructor() {
     }
