@@ -22,6 +22,11 @@ spec:
               value: "mongodb://payments-mongo-srv:27017/payments"
             - name: RabbitMQ_URI
               value: "amqp://rabbitmq-srv:5672"
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
 
 ---
 apiVersion: v1
