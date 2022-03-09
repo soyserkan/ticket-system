@@ -28,7 +28,7 @@ TicketShow.getInitialProps = async (context, client) => {
   const { ticketId } = context.query;
   const response = await client.get(`/api/tickets/${ticketId}`).catch(function () { });
 
-  return { ticket: response && response.data ? response.data : [] };
+  return { ticket: response && response.data ? response.data : {} };
 };
 
 export default TicketShow;
