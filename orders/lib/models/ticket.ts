@@ -11,9 +11,9 @@ export interface TicketAttr extends mongoose.Document {
     price: string,
     isReserved(): Promise<boolean>;
 }
-export interface TicketModel extends mongoose.Model<TicketAttr> {
-    findByEvent(parameters: { id: string, version: number }): Promise<TicketAttr | null>;
-}
+// export interface TicketModel extends mongoose.Model<TicketAttr> {
+//     findByEvent(parameters: { id: string, version: number }): Promise<TicketAttr | null>;
+// }
 
 const ticketSchema: Schema = new Schema({
     title: {
@@ -54,13 +54,16 @@ ticketSchema.methods.isReserved = async function () {
     return !!order;
 }
 
-ticketSchema.statics.findByEvent = function (parameters: { id: string, version: number }) {
-    return Ticket.findOne({
-        _id: parameters.id,
-        version: parameters.version - 1
-    });
-}
+// ticketSchema.statics.findByEvent = function (parameters: { id: string, version: number }) {
+//     return Ticket.findOne({
+//         _id: parameters.id,
+//         version: parameters.version - 1
+//     });
+// }
 
 
-const Ticket = model<TicketAttr, TicketModel>('Ticket', ticketSchema);
-export default Ticket;
+
+// const Ticket = model<TicketAttr, TicketModel>('Ticket', ticketSchema);
+//export default Ticket;
+
+export default model<TicketAttr>('Ticket', ticketSchema);

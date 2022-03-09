@@ -41,7 +41,7 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findByEvent({ id: content.id, version: content.version });
+                const ticket = await Ticket.findOne({ id: content.id, version: content.version - 1 });
                 if (!ticket) {
                     throw new Error("Ticket not found!");
                 } else {
