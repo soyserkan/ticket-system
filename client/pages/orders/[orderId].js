@@ -37,7 +37,7 @@ const OrderShow = ({ order, currentUser }) => {
       Time left to pay: {timeLeft} seconds
       <StripeCheckout
         token={({ id }) => doRequest({ token: id })}
-        stripeKey="pk_test_JMdyKVvf8EGTB0Fl28GsN7YY"
+        stripeKey="pk_test_51Kb9JKB0qCJ8U7a3Ho4oQ2wfW6VAm7j4LiwhBYrxzN8l8jktDbxpAF2Pm1IcpyqfdIq46ViaHIIfx8QJAyAXlNv200KjotyJQ3"
         amount={order.ticket.price * 100}
         email={currentUser.email}
       />
@@ -50,7 +50,7 @@ OrderShow.getInitialProps = async (context, client) => {
   const { orderId } = context.query;
   const response = await client.get(`/api/orders/${orderId}`).catch(function () { });
 
-  return { order: response && response.data ? response.data : [] };
+  return { order: response && response.data ? response.data : {} };
 };
 
 export default OrderShow;

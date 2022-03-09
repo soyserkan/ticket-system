@@ -46,7 +46,7 @@ export class TicketController {
     }
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const tickets = await Ticket.find({});
+            const tickets = await Ticket.find({ orderId: undefined });
             if (tickets && tickets.length > 0) {
                 res.status(HttpStatus.OK).send(tickets);
             } else {
