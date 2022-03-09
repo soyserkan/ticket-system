@@ -21,6 +21,9 @@ export class TicketSubscriber {
             subscriber.listen(QueueName.EXPIRATION_COMPLETE, optionsCallback => {
                 self.ExpirationComplete(optionsCallback);
             });
+            subscriber.listen(QueueName.PAYMENT_CREATE, optionsCallback => {
+                self.PaymentCreate(optionsCallback);
+            });
         }
 
     }
@@ -38,7 +41,7 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findByEvent({ id: content.id, version: content.version });
+                const ticket = await Ticket.findOne({ id: content.id, version: content.version - 1 });
                 if (!ticket) {
                     throw new Error("Ticket not found!");
                 } else {
@@ -56,6 +59,9 @@ export class TicketSubscriber {
                 if (!order) {
                     throw new Error("Ticket not found!");
                 } else {
+                    if (order.status == OrderStatus.Complete) {
+                        rabbitmq.channel.ack(msg);
+                    }
                     await order.set({ status: OrderStatus.Cancelled }).save();
                     await new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CANCEL, {
                         id: order.id,
@@ -64,6 +70,20 @@ export class TicketSubscriber {
                             id: order.ticket.id
                         }
                     })
+                    rabbitmq.channel.ack(msg);
+                }
+            }
+        }
+    }
+    async PaymentCreate(msg) {
+        if (msg && msg.content) {
+            const content = JSON.parse(msg.content.toString());
+            if (content) {
+                const order = await Order.findById({ id: content.orderId });
+                if (!order) {
+                    throw new Error("Order not found!");
+                } else {
+                    await order.set({ status: OrderStatus.Complete }).save();
                     rabbitmq.channel.ack(msg);
                 }
             }

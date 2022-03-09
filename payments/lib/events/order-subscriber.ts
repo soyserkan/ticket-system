@@ -1,6 +1,7 @@
 import { Publisher, rabbitmq, Subscriber } from "@serkans/rabbitmq-service";
 import { QueueName } from "../types/queue-names";
-import Ticket from '../models/ticket';
+import Order from '../models/order';
+import { OrderStatus } from "../types/order-status";
 
 
 export class OrderSubscriber {
@@ -23,19 +24,13 @@ export class OrderSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findById(content.ticket.id);
-                if (!ticket) {
-                    throw new Error("Ticket not found!");
-                }
-                await ticket.set({ orderId: content.id }).save();
-                await new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
-                    id: ticket.id,
-                    version: ticket.version,
-                    title: ticket.title,
-                    price: ticket.price,
-                    userId: ticket.userId,
-                    orderId: ticket.orderId
-                });
+                await new Order({
+                    _id: content.id,
+                    price: content.ticket.price,
+                    status: content.status,
+                    userId: content.userId,
+                    version: content.version
+                }).save();
                 rabbitmq.channel.ack(msg);
             }
         }
@@ -44,19 +39,11 @@ export class OrderSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findById(content.ticket.id);
-                if (!ticket) {
-                    throw new Error("Ticket not found!");
+                const order = await Order.findOne({ _id: content.id, version: content.version - 1 });
+                if (!order) {
+                    throw new Error("Order not found!");
                 }
-                await ticket.set({ orderId: undefined }).save();
-                await new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
-                    id: ticket.id,
-                    version: ticket.version,
-                    title: ticket.title,
-                    price: ticket.price,
-                    userId: ticket.userId,
-                    orderId: ticket.orderId
-                });
+                await order.set({ status: OrderStatus.Cancelled }).save();
                 rabbitmq.channel.ack(msg);
             }
         }
