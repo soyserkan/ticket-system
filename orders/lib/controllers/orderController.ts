@@ -10,7 +10,6 @@ import { QueueName } from '../types/queue-names';
 
 export class OrderController {
 
-    //EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
     public async create(req: Request, res: Response, next: NextFunction) {
         try {
@@ -22,10 +21,14 @@ export class OrderController {
             if (isReserved) {
                 throw new Error("Ticket is already reserved");
             }
-            // const expiration = new Date();
-            // expiration.setSeconds(expiration.getSeconds() + this.EXPIRATION_WINDOW_SECONDS);
-            const order = await Order.create({ userId: req.currentUser?.id, ticket: ticket });
-            new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CREATE, {
+            const expiration = new Date();
+            expiration.setSeconds(expiration.getSeconds() + 15 * 60);
+
+            const order = await Order.create({ userId: req.currentUser?.id, ticket: ticket, expiresAt: expiration });
+
+            console.log(order.id);
+
+            await new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CREATE, {
                 id: order.id,
                 version: order.version,
                 status: order.status,
@@ -36,6 +39,7 @@ export class OrderController {
                     price: ticket.price
                 }
             } as OrderAttr)
+            
             res.status(HttpStatus.CREATED).send(order);
         } catch (error) {
             next(error);
