@@ -29,7 +29,7 @@ export class PaymentController {
                     if (charge) {
                         const payment = await Payment.create({ orderId, stripeId: charge.id });
                         if (payment) {
-                            new Publisher(rabbitmq.channel).publish(QueueName.PAYMENT_CREATE, {
+                            await new Publisher(rabbitmq.channel).publish(QueueName.PAYMENT_CREATE, {
                                 id: payment.id,
                                 orderId: orderId,
                                 stripeId: charge.id

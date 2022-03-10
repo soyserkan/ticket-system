@@ -22,7 +22,7 @@ export class OrderController {
                 throw new Error("Ticket is already reserved");
             }
             const expiration = new Date();
-            expiration.setSeconds(expiration.getSeconds() + 15 * 60);
+            expiration.setSeconds(expiration.getSeconds() + 1 * 60);
 
             const order = await Order.create({ userId: req.currentUser?.id, ticket: ticket, expiresAt: expiration });
 
@@ -39,7 +39,7 @@ export class OrderController {
                     price: ticket.price
                 }
             } as OrderAttr)
-            
+
             res.status(HttpStatus.CREATED).send(order);
         } catch (error) {
             next(error);
@@ -75,7 +75,7 @@ export class OrderController {
             if (order) {
                 order.status = OrderStatus.Cancelled;
                 await order.save();
-                new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CANCEL, {
+                await new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CANCEL, {
                     id: order.id,
                     version: order.version,
                     ticket: {
