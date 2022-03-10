@@ -74,7 +74,7 @@ export class TicketController {
                     if (!validate.error) {
                         ticket.set({ title: req.body.title, price: req.body.price });
                         await ticket.save();
-                        new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
+                        await new Publisher(rabbitmq.channel).publish(QueueName.TICKET_UPDATE, {
                             id: ticket.id,
                             version: ticket.version,
                             title: ticket.title,
