@@ -7,7 +7,7 @@ import { OrderStatus } from '../types/order-status';
 import { stripe } from '../services/stripe';
 import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
 import { QueueName } from '../types/queue-names';
-
+//asd
 export class PaymentController {
     public async create(req: Request, res: Response, next: NextFunction) {
         try {
