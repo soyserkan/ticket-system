@@ -25,8 +25,7 @@ const orderSchema: Schema = new Schema({
         default: OrderStatus.Created
     },
     expiresAt: {
-        type: Schema.Types.Date,
-        default: expiration.setSeconds(expiration.getSeconds() + 15 * 60)
+        type: Schema.Types.Date
     },
     ticket: {
         type: Schema.Types.ObjectId,
