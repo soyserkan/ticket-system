@@ -25,7 +25,8 @@ export class PaymentController {
                     if (order.status === OrderStatus.Cancelled) {
                         throw new Error("cannot edit a reserved ticket");
                     }
-                    const charge = await stripe.charges.create({ currency: 'usd', amount: order.price * 100, source: token });
+                    // const charge = await stripe.charges.create({ currency: 'usd', amount: order.price * 100, source: token });
+                    const charge = { id: Math.random() }
                     if (charge) {
                         const payment = await Payment.create({ orderId, stripeId: charge.id });
                         if (payment) {
@@ -42,6 +43,7 @@ export class PaymentController {
                 }
             }
         } catch (error) {
+            console.log(error);
             next(error);
         }
     }

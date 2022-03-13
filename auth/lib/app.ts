@@ -24,9 +24,9 @@ export class App {
     private config(): void {
         this.app.set('port', this.port);
         this.app.set('trust proxy', true);
-        if (!process.env.JWT_KEY) {
-            throw new Error("jwt key not found");
-        }
+        // if (!process.env.JWT_KEY) {
+        //     throw new Error("jwt key not found");
+        // }
     }
     private middlewares(): void {
         this.app.use(express.static(path.join(Directories.public, 'public')));
@@ -43,13 +43,13 @@ export class App {
             console.log(`Server => listening to port: ${PORT}!`);
         } catch (error) {
             console.log(error);
-            process.exit(1);
+           // process.exit(1);
         }
     }
     async mongoose() {
         try {
             if (process.env.MONGO_URI) {
-                await mongoose.connect(process.env.MONGO_URI);
+                await mongoose.connect(process.env.MONGO_URI, { tlsInsecure: true });
                 mongoose.set('debug', true);
                 console.log('Mongoose => connection successful');
             } else {
@@ -57,7 +57,7 @@ export class App {
             }
         } catch (error) {
             console.error('Mongoose => connection error: ' + error);
-            process.exit(1);
+            //process.exit(1);
         }
     }
     private routes(): void {

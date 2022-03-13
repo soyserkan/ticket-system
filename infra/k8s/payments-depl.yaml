@@ -19,9 +19,9 @@ spec:
             - name: JWT_KEY
               value: "mysecretkey"
             - name: MONGO_URI
-              value: "mongodb://payments-mongo-srv:27017/payments"
+              value: "mongodb+srv://doadmin:63f8c2s9Ud4GbO51@db-mongodb-fra1-47888-2248d03c.mongo.ondigitalocean.com/payments?replicaSet=db-mongodb-fra1-47888&ssl=true&authSource=admin"
             - name: RabbitMQ_URI
-              value: "amqp://rabbitmq-srv:5672"
+              value: "amqps://orbnjqbv:EFzRd6FnyEiF5eJ3-tkew2lyIa99zsFT@roedeer.rmq.cloudamqp.com/orbnjqbv"
             - name: STRIPE_KEY
               valueFrom:
                 secretKeyRef:
@@ -39,5 +39,5 @@ spec:
   ports:
     - name: payments
       protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 3004
+      targetPort: 3004

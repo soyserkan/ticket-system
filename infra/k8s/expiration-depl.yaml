@@ -17,9 +17,15 @@ spec:
           image: serkansoy/expiration
           env:
             - name: RabbitMQ_URI
-              value: "amqp://rabbitmq-srv:5672"
+              value: "amqps://orbnjqbv:EFzRd6FnyEiF5eJ3-tkew2lyIa99zsFT@roedeer.rmq.cloudamqp.com/orbnjqbv"
             - name: REDIS_HOST
               value: expiration-redis-srv
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
+
 
 ---
 apiVersion: v1
@@ -32,5 +38,5 @@ spec:
   ports:
     - name: expiration
       protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 3002
+      targetPort: 3002

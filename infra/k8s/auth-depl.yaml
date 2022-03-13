@@ -19,7 +19,7 @@ spec:
             - name: JWT_KEY
               value: "mysecretkey"
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: "mongodb+srv://doadmin:63f8c2s9Ud4GbO51@db-mongodb-fra1-47888-2248d03c.mongo.ondigitalocean.com/auth?replicaSet=db-mongodb-fra1-47888&ssl=true&authSource=admin"
 
 ---
 apiVersion: v1

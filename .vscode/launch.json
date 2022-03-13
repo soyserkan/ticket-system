@@ -1,0 +1,84 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "auth",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["lib/server.ts", "--example", "hello"],
+            "cwd": "${workspaceRoot}/auth",
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+          },
+          {
+            "type": "node",
+            "request": "launch",
+            "name": "client",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--inspect", "node_modules/.bin/next", "dev"],
+            "cwd": "${workspaceFolder}/client",
+            "sourceMapPathOverrides": {
+              "webpack:///./*": "${workspaceRoot}/client/*"
+            }
+          },
+          {
+            "name": "expiration",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["lib/server.ts", "--example", "hello"],
+            "cwd": "${workspaceRoot}/expiration",
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+          },
+          {
+            "name": "orders",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["lib/server.ts", "--example", "hello"],
+            "cwd": "${workspaceRoot}/orders",
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+          },
+          {
+            "name": "payments",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["lib/server.ts", "--example", "hello"],
+            "cwd": "${workspaceRoot}/payments",
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+          },
+          {
+            "name": "tickets",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+            "args": ["lib/server.ts", "--example", "hello"],
+            "cwd": "${workspaceRoot}/tickets",
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+          }
+    ],
+    "compounds": [
+        {
+            "name": "ticket-system",
+            "configurations": [
+                "auth",
+                "client",
+                "expiration",
+                "orders",
+                "payments",
+                "tickets"
+            ]
+        }
+    ]
+}

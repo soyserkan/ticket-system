@@ -13,8 +13,8 @@ export class OrderSubscriber {
             subscriber.listen(QueueName.ORDER_CREATE, optionsCallback => {
                 self.OrderCreate(optionsCallback);
             });
-            subscriber.listen(QueueName.ORDER_DELETE, optionsCallback => {
-                self.OrderDelete(optionsCallback);
+            subscriber.listen(QueueName.ORDER_CANCEL, optionsCallback => {
+                self.OrderCancel(optionsCallback);
             });
         }
 
@@ -40,7 +40,7 @@ export class OrderSubscriber {
             }
         }
     }
-    async OrderDelete(msg) {
+    async OrderCancel(msg) {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
