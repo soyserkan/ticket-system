@@ -64,7 +64,7 @@ export class App {
     async mongoose(url: string | undefined) {
         try {
             if (url) {
-                await mongoose.connect(url);
+                await mongoose.connect(url, { tlsInsecure: true });
                 console.log('[MongoDB] connection successful');
             } else {
                 console.error('[MongoDB] connection uri not found');

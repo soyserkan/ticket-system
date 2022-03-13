@@ -15,6 +15,7 @@ export class OrderController {
         try {
             const ticket = await Ticket.findById(req.body.ticketId);
             if (!ticket) {
+                console.log("ticket not found")
                 throw new NotFoundError();
             }
             const isReserved = await ticket.isReserved();
@@ -47,7 +48,7 @@ export class OrderController {
     }
     public async get(req: Request, res: Response, next: NextFunction) {
         try {
-            const order = await Order.findOne({ userId: req.currentUser?.id, id: req.body.id }).populate('ticket');
+            const order = await Order.findOne({ userId: req.currentUser?.id, _id: req.params.id }).populate('ticket');
             if (order) {
                 res.status(HttpStatus.OK).send(order);
             } else {
@@ -71,7 +72,7 @@ export class OrderController {
     }
     public async delete(req: Request, res: Response, next: NextFunction) {
         try {
-            const order = await Order.findOne({ userId: req.currentUser?.id, id: req.body.id }).populate('ticket');
+            const order = await Order.findOne({ userId: req.currentUser?.id, _id: req.body.id }).populate('ticket');
             if (order) {
                 order.status = OrderStatus.Cancelled;
                 await order.save();

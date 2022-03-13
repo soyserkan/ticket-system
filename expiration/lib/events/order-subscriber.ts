@@ -13,9 +13,6 @@ export class OrderSubscriber {
             subscriber.listen(QueueName.ORDER_CREATE, optionsCallback => {
                 self.OrderCreate(optionsCallback);
             });
-            subscriber.listen(QueueName.ORDER_DELETE, optionsCallback => {
-                self.OrderDelete(optionsCallback);
-            });
         }
 
     }
@@ -25,16 +22,8 @@ export class OrderSubscriber {
             if (content) {
                 const delay = new Date(content.expiresAt).getTime() - new Date().getTime();
                 console.log("Scheduled job for", delay);
+                console.log(content);
                 await expirationQueue.add({ orderId: content.id }, { delay });
-                rabbitmq.channel.ack(msg);
-            }
-        }
-    }
-    async OrderDelete(msg) {
-        if (msg && msg.content) {
-            const content = JSON.parse(msg.content.toString());
-            if (content) {
-
                 rabbitmq.channel.ack(msg);
             }
         }

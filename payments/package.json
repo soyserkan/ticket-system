@@ -1,5 +1,5 @@
 {
-  "name": "tickets",
+  "name": "payments",
   "version": "1.0.0",
   "description": "",
   "main": "server.ts",
@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "@serkans/error-handler": "^1.0.4",
-    "@serkans/rabbitmq-service": "^1.0.15",
+    "@serkans/rabbitmq-service": "^1.0.20",
     "@serkans/status-codes": "^1.0.1",
     "amqplib": "^0.8.0",
     "cookie-session": "^2.0.0",

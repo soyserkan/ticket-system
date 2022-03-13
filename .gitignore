@@ -7,3 +7,7 @@ payments/node_modules
 client/.next
 auth/.env
 tickets/.env
+client/.env
+expiration/.env
+orders/.env
+payments/.env

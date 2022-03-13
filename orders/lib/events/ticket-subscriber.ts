@@ -25,14 +25,13 @@ export class TicketSubscriber {
                 self.PaymentCreate(optionsCallback);
             });
         }
-
     }
     async TicketCreate(msg) {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             const { id, title, price } = content;
             if (content) {
-                await new Ticket({ _id: id, title, price }).save();
+                await Ticket.create({ _id: id, title, price });
                 rabbitmq.channel.ack(msg);
             }
         }
@@ -41,7 +40,7 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const ticket = await Ticket.findOne({ id: content.id, version: content.version - 1 });
+                const ticket = await Ticket.findOne({ _id: content.id, version: content.version - 1 });
                 if (!ticket) {
                     throw new Error("Ticket not found!");
                 } else {
@@ -55,12 +54,13 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
+                console.log(content);
                 const order = await Order.findById(content.orderId).populate('ticket');
                 if (!order) {
                     throw new Error("Ticket not found!");
                 } else {
                     if (order.status == OrderStatus.Complete) {
-                        rabbitmq.channel.ack(msg);
+                        return rabbitmq.channel.ack(msg);
                     }
                     await order.set({ status: OrderStatus.Cancelled }).save();
                     await new Publisher(rabbitmq.channel).publish(QueueName.ORDER_CANCEL, {
@@ -79,7 +79,7 @@ export class TicketSubscriber {
         if (msg && msg.content) {
             const content = JSON.parse(msg.content.toString());
             if (content) {
-                const order = await Order.findById({ id: content.orderId });
+                const order = await Order.findById(content.orderId);
                 if (!order) {
                     throw new Error("Order not found!");
                 } else {

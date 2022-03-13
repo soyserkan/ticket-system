@@ -26,9 +26,6 @@ export class App {
     private config(): void {
         this.app.set('port', this.port);
         this.app.set('trust proxy', true);
-        if (!process.env.JWT_KEY) {
-            throw new Error("jwt key not found");
-        }
     }
     private middlewares(): void {
         this.app.use(express.static(path.join(Directories.public, 'public')));
@@ -64,7 +61,7 @@ export class App {
     async mongoose(url: string | undefined) {
         try {
             if (url) {
-                await mongoose.connect(url);
+                await mongoose.connect(url, { tlsInsecure: true });
                 console.log('[MongoDB] connection successful');
             } else {
                 console.error('[MongoDB] connection uri not found');

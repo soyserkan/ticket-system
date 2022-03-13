@@ -19,9 +19,9 @@ spec:
             - name: JWT_KEY
               value: "mysecretkey"
             - name: MONGO_URI
-              value: "mongodb://orders-mongo-srv:27017/orders"
+              value: "mongodb+srv://doadmin:63f8c2s9Ud4GbO51@db-mongodb-fra1-47888-2248d03c.mongo.ondigitalocean.com/orders?replicaSet=db-mongodb-fra1-47888&ssl=true&authSource=admin"
             - name: RabbitMQ_URI
-              value: "amqp://rabbitmq-srv:5672"
+              value: "amqps://orbnjqbv:EFzRd6FnyEiF5eJ3-tkew2lyIa99zsFT@roedeer.rmq.cloudamqp.com/orbnjqbv"
 
 ---
 apiVersion: v1
@@ -34,5 +34,5 @@ spec:
   ports:
     - name: orders
       protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 3003
+      targetPort: 3003
