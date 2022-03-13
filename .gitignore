@@ -9,5 +9,5 @@ auth/.env
 tickets/.env
 client/.env
 expiration/.env
-orders/.env
 payments/.env
+orders/.env

@@ -5,7 +5,7 @@ import { JoiValidationError, NotFoundError, UnauthorizedError } from '@serkans/e
 import { Publisher, rabbitmq } from '@serkans/rabbitmq-service';
 import { ticketValidation } from '../validations/ticket';
 import { QueueName } from '../types/queue-names';
-
+//
 export class TicketController {
     public async create(req: Request, res: Response, next: NextFunction) {
         try {
