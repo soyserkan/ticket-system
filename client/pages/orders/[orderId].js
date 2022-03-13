@@ -28,9 +28,9 @@ const OrderShow = ({ order, currentUser }) => {
     };
   }, [order]);
 
-  // if (timeLeft < 0) {
-  //   return <div>Order Expired</div>;
-  // }
+  if (timeLeft < 0) {
+    return <div>Order Expired</div>;
+  }
 
   return (
     <div>

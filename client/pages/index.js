@@ -27,7 +27,7 @@ const LandingPage = ({ currentUser, tickets }) => {
           </tr>
         </thead>
         <tbody>
-          {ticketList}
+          {ticketList.length > 0 ? ticketList : "Satın Alınabilir Bilet Bulunmamaktadır"}
         </tbody>
       </table>
     </div>
