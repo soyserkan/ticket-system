@@ -3,13 +3,20 @@ import crypto from "crypto";
 import User from '../models/user'
 import Token from '../models/token';
 import { NextFunction, Request, Response } from 'express';
-import { Nodemailer } from '../services/nodemailer';
 import { Directories } from '../directories';
 import { HttpStatus } from '@serkans/status-codes';
 import { JoiValidationError } from '@serkans/error-handler';
 import { signinValidation, signupValidation } from '../validations/user';
-//a
+import UserService from '../services/userServices';
+import LogService from '../services/log';
+
 export class UserController {
+    private userService: UserService;
+    //private logService: LogService;
+    constructor() {
+        this.userService = new UserService();
+        //this.logService = new LogService("User Service");
+    }
     public async signup(req: Request, res: Response, next: NextFunction) {
         try {
             const validate = signupValidation(req.body);
@@ -47,6 +54,7 @@ export class UserController {
                         if (result) {
                             const token = user.generateAuthToken();
                             req.session = { jwt: token };
+                            // this.logService.logger.debug(JSON.stringify(user));
                             res.status(HttpStatus.OK).send({ user });
                         } else {
                             throw new Error("invalid authentication credentials");
@@ -89,7 +97,7 @@ export class UserController {
                 const link = `${req.headers.referer}/login?token=${resetToken}&id=${user._id}`;
                 const path = `${Directories.scripts}/requestResetPassword.handlebars`
                 const title = "Şifre Değiştirme Talebi";
-                const sendEmailResult = await Nodemailer.sendEmailViaMailgun(user.email, title, { name: user.name, link: link }, path);
+                const sendEmailResult = await this.userService.sendEmail({ email: user.email, subject: title, payload: { name: user.name, link: link }, templatePath: path });
                 if (sendEmailResult && sendEmailResult.indexOf("queued") == -1) {
                     res.status(HttpStatus.OK).json(sendEmailResult);
                 }
@@ -111,8 +119,8 @@ export class UserController {
                     const user = await User.findById({ _id: req.body.userId });
                     if (user) {
                         const text = "Şifreniz başarıyla değiştirildi";
-                        const path = `${Directories.scripts}/resetPassword.handlebars`
-                        const sendEmailResult = await Nodemailer.sendEmailViaMailgun(user.email, text, { name: user.name }, path);
+                        const path = `${Directories.scripts}/resetPassword.handlebars`;
+                        const sendEmailResult = await this.userService.sendEmail({ email: user.email, subject: text, payload: { name: user.name }, templatePath: path });
                         if (sendEmailResult && sendEmailResult.indexOf("queued") == -1) {
                             await passwordResetToken.deleteOne();
                             res.status(HttpStatus.OK).json(sendEmailResult);

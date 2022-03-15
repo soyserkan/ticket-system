@@ -1,17 +1,16 @@
 
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
+//import bodyParser from 'body-parser';
 import * as cors from 'cors';
 import helmet from 'helmet';
 import { Server } from 'http';
 import path from 'path';
 import cookieSession from 'cookie-session';
-
 import UserRouter from './routes/userRoute';
 import { Directories } from './directories';
-import { NotFoundError } from '@serkans/error-handler';
-import { errorHandler } from './middlewares/error-handler';
+import { ConnectionError, ErrorHandlerMiddleware, NotFoundError } from '@serkans/error-handler';
+
 //asdf
 export class App {
     public app: Application;
@@ -24,14 +23,14 @@ export class App {
     private config(): void {
         this.app.set('port', this.port);
         this.app.set('trust proxy', true);
-        // if (!process.env.JWT_KEY) {
-        //     throw new Error("jwt key not found");
-        // }
+        if (!process.env.JWT_KEY) {
+            throw new NotFoundError("JWT_KEY not found!");
+        }
     }
     private middlewares(): void {
         this.app.use(express.static(path.join(Directories.public, 'public')));
-        this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(bodyParser.json());
+        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.json());
         this.app.use(cors.default());
         this.app.use(helmet());
         this.app.use(cookieSession({ signed: false, secure: false }));
@@ -42,8 +41,7 @@ export class App {
             await server.listen(PORT);
             console.log(`Server => listening to port: ${PORT}!`);
         } catch (error) {
-            console.log(error);
-           // process.exit(1);
+            throw new ConnectionError(JSON.stringify(error));
         }
     }
     async mongoose() {
@@ -56,8 +54,7 @@ export class App {
                 console.error('Mongoose => connection uri not found');
             }
         } catch (error) {
-            console.error('Mongoose => connection error: ' + error);
-            //process.exit(1);
+            throw new ConnectionError(JSON.stringify(error));
         }
     }
     private routes(): void {
@@ -65,7 +62,7 @@ export class App {
         router = express.Router();
         this.app.use('/', router);
         this.app.use('/api/users', UserRouter);
-        this.app.all("*", () => { throw new NotFoundError() })
-        this.app.use(errorHandler);
+        this.app.all("*", () => { throw new NotFoundError("Route not found!") })
+        this.app.use(ErrorHandlerMiddleware);
     }
 }
